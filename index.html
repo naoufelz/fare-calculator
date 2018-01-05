@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Fare Calculator</title>
+
+    <link href="./style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+            <h1>Fare Calculator</h1>
+            <div class="wrapperAddressInputs">
+                <label for="originAddress">Origin</label>
+                <input id="inputOriginAddress" name="originAddress" placeholder="Where are you coming from?" />
+                <br />
+                <label for="destinationAddress">Destination</label>
+                <input id="inputDestinationAddress" name="destinationAddress" placeholder="Where are you going to?" />
+                <button id="buttonCalculateFare">Calculate Fare!</button>
+            </div>
+
+            <div id="map"></div>
+
+    </div>
+    
+    
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB0EiemjmNY3TyeKXZUO5a3879S5enCd4U&libraries=places"></script>
+
+    <script>
+
+            //Autocompletes
+    
+            let originInput = document.querySelector('#inputOriginAddress');
+            let destinationInput = document.querySelector('#inputDestinationAddress');
+    
+            let options = {
+                type: ['address']
+            };
+    
+            let originAutocomplete = new google.maps.places.Autocomplete(originInput, options);
+            let destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput, options);
+    
+            let mapEl = document.querySelector('#map');
+            let map;
+            
+            function grabDirections() {
+                let directionsService = new google.maps.DirectionsService();
+                let latLng = new google.maps.LatLng(latitude, longitude);
+                let tokeLatLng = new google.maps.LatLng(toke.latitude, toke.longitude);
+    
+                document.querySelector('#map').style.opacity = 0;
+                document.querySelector('#map').style.zoom = 0;
+    
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: tokeLatLng,
+                    zoom: 4
+                });
+    
+                let directionsDisplay = new google.maps.DirectionsRenderer({
+                    map: map
+                });
+    
+                let request = {
+                    origin      : latLng,
+                    destination : tokeLatLng,
+                    travelMode  : 'DRIVING'
+                };
+    
+                let flightPath = new google.maps.Polyline({
+                    path: [latLng, tokeLatLng],
+                    geodesic: true,
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 1.0,
+                    strokeWeight: 2
+                });
+    
+                directionsService.route(request, function(response, status) {
+                    if ( status == google.maps.DirectionsStatus.OK ) {
+                        drivingTimeEl.innerText = `${response.routes[0].legs[0].duration.text}`; // the distance in metres
+                        directionsDisplay.setDirections(response);
+                        flightPath.setMap(map);
+                    } else {
+                        console.log('Error! Something happened: ', status, response);
+                    }
+                });
+    
+                tokeDistanceEl.innerText = `${prettyDistance} ${options.units}`;
+                flightTimeEl.innerText = `${flightTime} hours`;
+             }
+    
+            function toggleMap() {
+                if(mapEl.style.opacity == "0") {
+                    mapEl.style.opacity = '1';
+                    mapEl.style.zoom = '1';
+                    this.innerText = 'Hide Map';
+                }
+                else {
+                    mapEl.style.opacity = '0';
+                    mapEl.style.zoom = '0';
+                    this.innerText = 'Show Map';
+                }
+                
+            }
+            
+         
+    
+        </script>
+</body>
+</html>
