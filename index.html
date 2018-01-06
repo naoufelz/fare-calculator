@@ -1,42 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Fare Calculator</title>
-    <link href="./style.css" rel="stylesheet">   
+    <link href="./style.css" rel="stylesheet">
 </head>
+
 <body>
     <div class="container">
-            <h1>Fare Calculator</h1>
-            <div class="wrapperAddressInputs">
-                <label for="originAddress">Origin</label>
-                <input id="inputOriginAddress" name="originAddress" placeholder="Where are you coming from?" />
-                <br />
-                <label for="destinationAddress">Destination</label>
-                <input id="inputDestinationAddress" name="destinationAddress" placeholder="Where are you going to?" />
-                <label for="passengersNum">Passengers? (0-5)</label>
-                <select id="selectPassengersNum" name="passengersNum">
-                    <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
-                <button id="buttonCalculateFare">Calculate Fare!</button>
-                <p id="fareEstimate"></p>
-            </div>
+        <h1>Fare Calculator</h1>
+        <div class="wrapperAddressInputs">
+            <label for="originAddress">Origin</label>
+            <input id="inputOriginAddress" name="originAddress" placeholder="Where are you coming from?" />
+            <br />
+            <label for="destinationAddress">Destination</label>
+            <input id="inputDestinationAddress" name="destinationAddress" placeholder="Where are you going to?" />
+            <label for="passengersNum">Passengers? (1-5)</label>
+            <select id="selectPassengersNum" name="passengersNum">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <button id="buttonCalculateFare">Calculate Fare!</button>
+            <p id="fareEstimate"></p>
+        </div>
 
-            <div id="map"></div>
+        <div id="map"></div>
 
     </div>
-    </script> 
+    </script>
     <script>
-        let originInput, destinationInput, calculateFareButton, 
-        passengerDropdown, fareEl, options, originAutocomplete, destinationAutocomplete,
-        originLatLng, destinationLatLng, mapEl, map
+        let originInput, destinationInput, calculateFareButton,
+            passengerDropdown, fareEl, options, originAutocomplete, destinationAutocomplete,
+            originLatLng, destinationLatLng, mapEl, map
 
         function initialize() {
             originInput = document.querySelector('#inputOriginAddress');
@@ -59,14 +60,14 @@
             originLatLng, destinationLatLng;
             mapEl = document.querySelector('#map');
         }
-        
-        function handleInput (origin = false, dest = false) {
-            if(origin) originLatLng = originAutocomplete.getPlace().geometry.location;
-            if(dest) destinationLatLng = destinationAutocomplete.getPlace().geometry.location; 
+
+        function handleInput(origin = false, dest = false) {
+            if (origin) originLatLng = originAutocomplete.getPlace().geometry.location;
+            if (dest) destinationLatLng = destinationAutocomplete.getPlace().geometry.location;
         }
 
         function handleFareCalculation() {
-            if(!originLatLng || !destinationLatLng) {
+            if (!originLatLng || !destinationLatLng) {
                 fareEl.innerText = `You must fill out all fields!`;
                 return;
             }
@@ -84,9 +85,9 @@
             });
 
             let request = {
-                origin      : originLatLng,
-                destination : destinationLatLng,
-                travelMode  : 'DRIVING'
+                origin: originLatLng,
+                destination: destinationLatLng,
+                travelMode: 'DRIVING'
             };
 
             let polyline = new google.maps.Polyline({
@@ -97,14 +98,14 @@
                 strokeWeight: 2
             });
 
-            directionsService.route(request, function(response, status) {
-                if ( status == google.maps.DirectionsStatus.OK ) {
+            directionsService.route(request, function (response, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
                     directionsDisplay.setDirections(response);
-                    let miles = response.routes[0].legs[0].distance.value/1609.344;
-                    
+                    let miles = response.routes[0].legs[0].distance.value / 1609.344;
+
                     let baseValue = (miles > 0.125) ? 5.25 : 2;
-                    let passengerFee = (passengers > 0) ? 1 : 0;
-                    let adjMiles = (baseValue > 2) ? miles-0.125 : miles;
+                    let passengerFee = (passengers > 1) ? 1 : 0;
+                    let adjMiles = (baseValue > 2) ? miles - 0.125 : miles;
 
                     let feeEstimate = (baseValue + passengerFee + (adjMiles * 2.17)).toFixed(2).toLocaleString('en');
                     fareEl.innerText = `Your estimate is $${feeEstimate}!`;
@@ -119,4 +120,5 @@
     <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB0EiemjmNY3TyeKXZUO5a3879S5enCd4U&libraries=places&callback=initialize">
     </script>
 </body>
+
 </html>
