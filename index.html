@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Fare Calculator</title>
-    
-    <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB0EiemjmNY3TyeKXZUO5a3879S5enCd4U&libraries=places">
-    </script>
     <link href="./style.css" rel="stylesheet">   
 </head>
 <body>
@@ -37,27 +34,32 @@
     </div>
     </script> 
     <script>
-        let originInput = document.querySelector('#inputOriginAddress');
-        let destinationInput = document.querySelector('#inputDestinationAddress');
-        let calculateFareButton = document.querySelector('#buttonCalculateFare');
-        let passengerDropdown = document.querySelector('#selectPassengersNum');
-        let fareEl = document.querySelector('#fareEstimate');
+        let originInput, destinationInput, calculateFareButton, 
+        passengerDropdown, fareEl, options, originAutocomplete, destinationAutocomplete,
+        originLatLng, destinationLatLng, mapEl, map
 
-        let options = {
-            type: ['address']
-        };
+        function initialize() {
+            originInput = document.querySelector('#inputOriginAddress');
+            destinationInput = document.querySelector('#inputDestinationAddress');
+            calculateFareButton = document.querySelector('#buttonCalculateFare');
+            passengerDropdown = document.querySelector('#selectPassengersNum');
+            fareEl = document.querySelector('#fareEstimate');
 
-        let originAutocomplete = new google.maps.places.Autocomplete(originInput, options);
-        let destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput, options);
+            options = {
+                type: ['address']
+            };
 
-        originAutocomplete.addListener('place_changed', () => handleInput(true));
-        destinationAutocomplete.addListener('place_changed', () => handleInput(false, true));
-        calculateFareButton.addEventListener('click', handleFareCalculation);
+            originAutocomplete = new google.maps.places.Autocomplete(originInput, options);
+            destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput, options);
 
-        let originLatLng, destinationLatLng;
-        let mapEl = document.querySelector('#map');
-        let map;
+            originAutocomplete.addListener('place_changed', () => handleInput(true));
+            destinationAutocomplete.addListener('place_changed', () => handleInput(false, true));
+            calculateFareButton.addEventListener('click', handleFareCalculation);
 
+            originLatLng, destinationLatLng;
+            mapEl = document.querySelector('#map');
+        }
+        
         function handleInput (origin = false, dest = false) {
             if(origin) originLatLng = originAutocomplete.getPlace().geometry.location;
             if(dest) destinationLatLng = destinationAutocomplete.getPlace().geometry.location; 
@@ -114,6 +116,7 @@
             });
         }
     </script>
-    
+    <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB0EiemjmNY3TyeKXZUO5a3879S5enCd4U&libraries=places&callback=initialize">
+    </script>
 </body>
 </html>
