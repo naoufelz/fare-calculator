@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
     height: 100%;
     width: 100%;
     margin: 0;
@@ -8,17 +9,20 @@ html, body {
     color: rgb(46, 46, 46);
     text-align: center;
     box-sizing: border-box;
-    font-family: 'Helvetica Neue', Arial, sans-serif; }
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+}
 
 .container {
     margin: 0 auto;
     height: 100%;
-    width: 60%; }
+    width: 60%;
+}
 
 #map {
     margin: 10px auto;
     height: 50%;
-    width: 100%; }
+    width: 100%;
+}
 
 #buttonCalculateFare {
     outline: none;
@@ -54,7 +58,8 @@ html, body {
     text-align: left;
 }
 
-input, select {
+input,
+select {
     height: 45px;
     border-radius: 6px;
     outline: none;
