@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Fare Calculator</title>
-
-    <link href="./style.css" rel="stylesheet">
+    
+    <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB0EiemjmNY3TyeKXZUO5a3879S5enCd4U&libraries=places">
+    </script>
+    <link href="./style.css" rel="stylesheet">   
 </head>
 <body>
     <div class="container">
@@ -17,94 +19,101 @@
                 <br />
                 <label for="destinationAddress">Destination</label>
                 <input id="inputDestinationAddress" name="destinationAddress" placeholder="Where are you going to?" />
+                <label for="passengersNum">Passengers? (0-5)</label>
+                <select id="selectPassengersNum" name="passengersNum">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
                 <button id="buttonCalculateFare">Calculate Fare!</button>
+                <p id="fareEstimate"></p>
             </div>
 
             <div id="map"></div>
 
     </div>
-    
-    
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB0EiemjmNY3TyeKXZUO5a3879S5enCd4U&libraries=places"></script>
-
+    </script> 
     <script>
+        let originInput = document.querySelector('#inputOriginAddress');
+        let destinationInput = document.querySelector('#inputDestinationAddress');
+        let calculateFareButton = document.querySelector('#buttonCalculateFare');
+        let passengerDropdown = document.querySelector('#selectPassengersNum');
+        let fareEl = document.querySelector('#fareEstimate');
 
-            //Autocompletes
-    
-            let originInput = document.querySelector('#inputOriginAddress');
-            let destinationInput = document.querySelector('#inputDestinationAddress');
-    
-            let options = {
-                type: ['address']
-            };
-    
-            let originAutocomplete = new google.maps.places.Autocomplete(originInput, options);
-            let destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput, options);
-    
-            let mapEl = document.querySelector('#map');
-            let map;
-            
-            function grabDirections() {
-                let directionsService = new google.maps.DirectionsService();
-                let latLng = new google.maps.LatLng(latitude, longitude);
-                let tokeLatLng = new google.maps.LatLng(toke.latitude, toke.longitude);
-    
-                document.querySelector('#map').style.opacity = 0;
-                document.querySelector('#map').style.zoom = 0;
-    
-                map = new google.maps.Map(document.getElementById('map'), {
-                    center: tokeLatLng,
-                    zoom: 4
-                });
-    
-                let directionsDisplay = new google.maps.DirectionsRenderer({
-                    map: map
-                });
-    
-                let request = {
-                    origin      : latLng,
-                    destination : tokeLatLng,
-                    travelMode  : 'DRIVING'
-                };
-    
-                let flightPath = new google.maps.Polyline({
-                    path: [latLng, tokeLatLng],
-                    geodesic: true,
-                    strokeColor: '#FF0000',
-                    strokeOpacity: 1.0,
-                    strokeWeight: 2
-                });
-    
-                directionsService.route(request, function(response, status) {
-                    if ( status == google.maps.DirectionsStatus.OK ) {
-                        drivingTimeEl.innerText = `${response.routes[0].legs[0].duration.text}`; // the distance in metres
-                        directionsDisplay.setDirections(response);
-                        flightPath.setMap(map);
-                    } else {
-                        console.log('Error! Something happened: ', status, response);
-                    }
-                });
-    
-                tokeDistanceEl.innerText = `${prettyDistance} ${options.units}`;
-                flightTimeEl.innerText = `${flightTime} hours`;
-             }
-    
-            function toggleMap() {
-                if(mapEl.style.opacity == "0") {
-                    mapEl.style.opacity = '1';
-                    mapEl.style.zoom = '1';
-                    this.innerText = 'Hide Map';
-                }
-                else {
-                    mapEl.style.opacity = '0';
-                    mapEl.style.zoom = '0';
-                    this.innerText = 'Show Map';
-                }
-                
+        let options = {
+            type: ['address']
+        };
+
+        let originAutocomplete = new google.maps.places.Autocomplete(originInput, options);
+        let destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput, options);
+
+        originAutocomplete.addListener('place_changed', () => handleInput(true));
+        destinationAutocomplete.addListener('place_changed', () => handleInput(false, true));
+        calculateFareButton.addEventListener('click', handleFareCalculation);
+
+        let originLatLng, destinationLatLng;
+        let mapEl = document.querySelector('#map');
+        let map;
+
+        function handleInput (origin = false, dest = false) {
+            if(origin) originLatLng = originAutocomplete.getPlace().geometry.location;
+            if(dest) destinationLatLng = destinationAutocomplete.getPlace().geometry.location; 
+        }
+
+        function handleFareCalculation() {
+            if(!originLatLng || !destinationLatLng) {
+                fareEl.innerText = `You must fill out all fields!`;
+                return;
             }
-            
-         
+            let directionsService = new google.maps.DirectionsService();
+            let bounds = new google.maps.LatLngBounds(originLatLng, destinationLatLng);
+            let passengers = parseFloat(passengerDropdown.value);
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: bounds.getCenter(),
+                zoom: 14
+            });
+
+            let directionsDisplay = new google.maps.DirectionsRenderer({
+                map: map
+            });
+
+            let request = {
+                origin      : originLatLng,
+                destination : destinationLatLng,
+                travelMode  : 'DRIVING'
+            };
+
+            let polyline = new google.maps.Polyline({
+                path: [originLatLng, destinationLatLng],
+                geodesic: true,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
+
+            directionsService.route(request, function(response, status) {
+                if ( status == google.maps.DirectionsStatus.OK ) {
+                    directionsDisplay.setDirections(response);
+                    let miles = response.routes[0].legs[0].distance.value/1609.344;
+                    
+                    let baseValue = (miles > 0.125) ? 5.25 : 2;
+                    let passengerFee = (passengers > 0) ? 1 : 0;
+                    let adjMiles = (baseValue > 2) ? miles-0.125 : miles;
+
+                    let feeEstimate = (baseValue + passengerFee + (adjMiles * 2.17)).toFixed(2).toLocaleString('en');
+                    fareEl.innerText = `Your estimate is $${feeEstimate}!`;
+
+                    // polyline.setMap(map);
+                } else {
+                    console.log('Error! Something happened: ', status, response);
+                }
+            });
+        }
+    </script>
     
-        </script>
 </body>
 </html>
