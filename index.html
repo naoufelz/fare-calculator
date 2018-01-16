@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Fare Calculator</title>
     <link href="./style.css" rel="stylesheet">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
 </head>
 
 <body>
@@ -18,16 +19,16 @@
             <br />
             <label for="destinationAddress">Destination</label>
             <input id="inputDestinationAddress" name="destinationAddress" placeholder="Where are you going to?" />
-            <label for="passengersNum">Passengers? (1-5)</label>
+            <label for="passengersNum">Passengers? (1-4)</label>
             <select id="selectPassengersNum" name="passengersNum">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
-                <option value="5">5</option>
             </select>
             <button id="buttonCalculateFare">Calculate Fare!</button>
             <p id="fareEstimate"></p>
+            <div id="fareBreakdown" class="fareBreakdownContainer"></div>
         </div>
 
         <div id="map"></div>
