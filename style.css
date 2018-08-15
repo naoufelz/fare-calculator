@@ -66,6 +66,35 @@ svg:hover {
     width: 100%;
 }
 
+#buttonSubmitData {
+    outline: none;
+    border: none;
+    cursor: pointer;
+    display: block;
+    position: relative;
+    background-color: #FCAD26;
+    font-size: 0.4em;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 15px 20px;
+    margin: 10px auto;
+    border-radius: 10px;
+    box-shadow: 0 6px #EFA424;
+    transition: all 0.2s;
+    width: 100%;
+}
+
+#buttonSubmitData:hover {
+    box-shadow: 0 4px #EFA424;
+    top: 2px;
+}
+
+#buttonSubmitData:active {
+    box-shadow: 0 -1px #EFA424;
+    top: 6px;
+}
+
 #buttonCalculateFare {
     outline: none;
     border: none;
