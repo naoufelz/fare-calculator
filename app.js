@@ -142,7 +142,7 @@ function handleFareCalculation() {
               noTraffic : feeEstimate,
               lightTraffic : (feeEstimate * 1.55).toFixed(2).toLocaleString("en"),
               heavyTraffic : (feeEstimate * 3).toFixed(2).toLocaleString("en")
-          }
+          };
       };
       breakdownButton = document.querySelector("#fareBreakdownButton");
       breakdownButton.addEventListener('click', () => grabBreakdownDetails(data));
