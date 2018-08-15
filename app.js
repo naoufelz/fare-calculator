@@ -138,10 +138,10 @@ function handleFareCalculation() {
           baseFare : '$' + baseValue,
           passengerFee,
           airportFee : 'N/A',
-          //estimatedFare : {
-              //noTraffic : feeEstimate,
-              //lightTraffic : (feeEstimate * 1.55).toFixed(2).toLocaleString("en"),
-              //heavyTraffic : (feeEstimate * 3).toFixed(2).toLocaleString("en")
+          estimatedFare : {
+              noTraffic : feeEstimate,
+              lightTraffic : (feeEstimate * 1.55).toFixed(2).toLocaleString("en"),
+              heavyTraffic : (feeEstimate * 3).toFixed(2).toLocaleString("en")
           }
       };
       breakdownButton = document.querySelector("#fareBreakdownButton");
