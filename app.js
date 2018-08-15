@@ -142,13 +142,13 @@ function handleFareCalculation() {
               noTraffic : feeEstimate,
               lightTraffic : (feeEstimate * 1.55).toFixed(2).toLocaleString("en"),
               heavyTraffic : (feeEstimate * 3).toFixed(2).toLocaleString("en")
-          };
+          }
       };
       breakdownButton = document.querySelector("#fareBreakdownButton");
       breakdownButton.addEventListener('click', () => grabBreakdownDetails(data));
       // polyline.setMap(map);
     } else {
-      console.log("Error! Something happened: ", status, response);
+      console.log('"Error! Something happened: "', status, response);
     }
   });
 }
