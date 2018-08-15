@@ -58,7 +58,7 @@ function grabBreakdownDetails(data) {
             <td>${data.estimatedFare.noTraffic}</td>
         </tr>
         <tr>
-            <td>Dispatch:</td>
+            <td>Base Fare:</td>
             <td>${data.dispatchFee}</td>
         </tr>
         <tr>
@@ -124,7 +124,7 @@ function handleFareCalculation() {
       directionsDisplay.setDirections(response);
       let miles = response.routes[0].legs[0].distance.value / 1609.344;
 
-      let baseValue = miles > 0.125 ? 5.25 : 2;
+      let baseValue = miles > 0.125 ? 7.0 : 2;
       let passengerFee = passengers > 1 ? 1 : 0;
       let adjMiles = baseValue > 2 ? miles - 0.125 : miles;
 
@@ -135,7 +135,7 @@ function handleFareCalculation() {
       let data = {
           estimatedMiles : response.routes[0].legs[0].distance.text,
           estimatedTime : response.routes[0].legs[0].duration.text,
-          dispatchFee : baseValue,
+          baseFare : baseValue,
           passengerFee,
           airportFee : 'N/A',
           estimatedFare : {
