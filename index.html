@@ -14,6 +14,7 @@
     <div class="container">
         <h1>Fare Calculator</h1>
         <div class="wrapperAddressInputs">
+            <form action="https://mailthis.to/MidwestTrustedTransportation" method="POST" encType="multipart/form-data">
             <label for="originAddress">Your Origin</label>
             <input id="inputOriginAddress" name="originAddress" placeholder="Where are you coming from?" />
             <br />
@@ -27,9 +28,12 @@
                 <option value="4">4</option>
             </select>
             <button id="buttonCalculateFare">Calculate Fare!</button>
-            <button id="buttonSubmitData">Book your Ride or Event!</button>
+            <input type="button" id="buttonSubmitData">Book your Ride or Event!</input>
             <p id="fareEstimate"></p>
             <div id="fareBreakdown" class="fareBreakdownContainer"></div>
+            <input type="hidden" name="_subject" value="Booking Submitted">
+            <input type="hidden" name="_confirmation" value="">
+            </form>
         </div>
 
         <div id="map"></div>
