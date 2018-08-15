@@ -128,14 +128,14 @@ function handleFareCalculation() {
       let passengerFee = passengers > 1 ? 1 : 0;
       let adjMiles = baseValue > 2 ? miles - 0.125 : miles;
 
-      let feeEstimate = (baseValue + passengerFee + adjMiles * 2.17)
+      let feeEstimate = (baseValue + passengerFee + adjMiles * 2.75)
         .toFixed(2)
         .toLocaleString("en");
       fareEl.innerHTML = `Your estimate is $${feeEstimate}! <a id="fareBreakdownButton"><i class="fas fa-info-circle"></i></a>`;
       let data = {
           estimatedMiles : response.routes[0].legs[0].distance.text,
           estimatedTime : response.routes[0].legs[0].duration.text,
-          baseFare : baseValue,
+          baseFare : '$' + baseValue,
           passengerFee,
           airportFee : 'N/A',
           estimatedFare : {
