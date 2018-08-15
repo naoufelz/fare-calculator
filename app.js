@@ -59,7 +59,7 @@ function grabBreakdownDetails(data) {
         </tr>
         <tr>
             <td>Base Fare:</td>
-            <td>${data.dispatchFee}</td>
+            <td>${data.baseFare}</td>
         </tr>
         <tr>
             <td>Extra Passengers:</td>
